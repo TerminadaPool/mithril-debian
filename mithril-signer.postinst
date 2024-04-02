@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = "configure" ]; then
+  CONFIG_DIR='/etc/cardano'
+  HOME_DIR='/var/lib/cardano'
+
+  # Create user 'cardano' if not already present
+  if ! getent passwd cardano >/dev/null; then
+    # Defaults to create group=cardano, home=/home/cardano
+    # Home directory /var/lib/cardano created by adduser command
+    adduser --quiet --system --group --shell '/bin/bash' --home "${HOME_DIR}" cardano
+  fi
+
+  # Create private key and log directories
+  # private readable by cardano so cn-leaderlog script can read keys when run as cardano user
+  [ ! -d "${CONFIG_DIR}/private" ] && install -d -m 0750 -o root -g cardano "${CONFIG_DIR}/private"
+
+fi
+
+#DEBHELPER#
+
+exit 0

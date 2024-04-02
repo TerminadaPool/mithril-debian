@@ -1,0 +1,10 @@
+.debhelper/
+debhelper-build-stamp
+files
+mithril/
+mithril-aggregator/
+mithril-client/
+mithril-signer/
+*.substvars
+*.debhelper
+*.debhelper.log
