@@ -21,12 +21,12 @@ sudo adduser --gecos '' --disabled-password builder
 
 Install build dependencies and some extra requirements
 ```
-sudo apt install build-essential fakeroot devscripts debhelper autoconf-archive d-shlibs pkg-kde-tools git curl automake pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make jq libncursesw5 libtool autoconf libncurses-dev libncurses5
+sudo apt install build-essential fakeroot devscripts debhelper autoconf-archive d-shlibs pkg-kde-tools git curl automake pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make jq libncursesw5 libtool autoconf libncurses-dev libncurses5 libnuma-dev
 ```
 
 Recommend install llvm and set cc and c++ to use clang
 ```
-sudo apt install llvm clang libnuma-dev; \
+sudo apt install llvm clang; \
 sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100; \
 sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
 ```
