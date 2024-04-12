@@ -30,6 +30,11 @@ sudo apt install llvm clang libnuma-dev; \
 sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100; \
 sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
 ```
+Ubuntu users might need to skip the previous optional step if their Ubuntu version of clang doesn't support optimization flag '-ffat-lto-objects'.  Revert the previous changes with:
+```
+sudo apt purge llvm clang; \
+sudo apt autoremove;
+```
 
 Switch to your builder account
 ```
