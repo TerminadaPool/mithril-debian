@@ -35,6 +35,11 @@ Ubuntu users might need to skip the previous optional step if their Ubuntu versi
 sudo apt purge llvm clang; \
 sudo apt autoremove;
 ```
+Or, if you want to keep clang and llvm on your system but not have clang as preferred cc/c++ compiler:
+```
+sudo update-alternatives --remove cc /usr/bin/clang; \
+sudo update-alternatives --remove c++ /usr/bin/clang++;
+```
 
 Switch to your builder account
 ```
