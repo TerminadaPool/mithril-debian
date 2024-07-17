@@ -67,7 +67,12 @@ Familiarise yourself with the following commands before running them. You can si
 
 ## Build mithril deb packages
 ```
+deb_build_instructions_repo='https://github.com/TerminadaPool/mithril-debian.git'; \
+mithril_repo='https://github.com/input-output-hk/mithril.git'; \
+
 MITHRIL_RELEASE="$(curl -s https://api.github.com/repos/input-output-hk/mithril/releases/latest | jq -r .tag_name)"; \
+echo "Building MITHRIL_RELEASE=${MITHRIL_RELEASE}"; \
+
 package='mithril'; \
 basedir="${HOME}/src/${package}"; \
 
@@ -75,12 +80,12 @@ mkdir -p "${basedir}"; \
 rm -rf "${basedir}/${package}-${MITHRIL_RELEASE}"; \
 cd "${basedir}"; \
 
-git clone https://github.com/input-output-hk/mithril.git "${package}-${MITHRIL_RELEASE}"; \
+git clone "${mithril_repo}" "${package}-${MITHRIL_RELEASE}"; \
 cd "${package}-${MITHRIL_RELEASE}"; \
 git fetch --all --recurse-submodules --tags; \
 git checkout "${MITHRIL_RELEASE}"; \
 
-git clone 'https://github.com/TerminadaPool/mithril-debian.git' debian; \
+git clone "${deb_build_instructions_repo}" debian; \
 unset MITHRIL_RELEASE package basedir; \
 # Nb: rustup update && rustup default stable; in debian/rules
 debuild --prepend-path "$HOME/.cargo/bin" --set-envvar RUSTUP_HOME="${HOME}/.rustup" --set-envvar CARGO_HOME="${HOME}/.cargo" -us -uc -b;
