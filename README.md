@@ -111,3 +111,51 @@ Expect to see lintian errors like the following at the end of the build process:
 > W: mithril-client: no-manual-page [usr/bin/mithril-client]  
 > W: mithril-signer: no-manual-page [usr/bin/mithril-signer]  
 
+
+****
+## Use mithril-client for fast bootstrapping
+1. Change to user cardano
+    ```
+    su - cardano;
+    ```
+2. Create subvol /var/lib/cardano/mainnet/db (Separate btrfs subvol so it is not included in rootfs snapshots.)
+    ```
+    mkdir -p mainnet; \
+    btrfs subvolume create mainnet/db; \
+    cd mainnet;
+    ```
+3. List available cardano-db snapshots for mainnet
+    ```
+    export GENESIS_VERIFICATION_KEY=$(curl -s https://raw.githubusercontent.com/input-output-hk/mithril/main/mithril-infra/configuration/release-mainnet/genesis.vkey); \
+    export AGGREGATOR_ENDPOINT=https://aggregator.release-mainnet.api.mithril.network/aggregator; \
+    mithril-client --run-mode mainnet cardano-db snapshot list;
+    ```
+    >| 487   | 5785      | mainnet | 7c3f669f3beb38e21bbb9bed76950e0790db9be1959c27f8f8a9f130741f555e | 48082064212 | 1         | 2024-05-25 01:00:29.133503778 UTC |
+4. Pick the latest snapshot from the list and ask mithril-client to download and verify it.  Eg:
+    ```
+    mithril-client --run-mode mainnet cardano-db download e7139f6fd587338b0b5b007cc12bcc3c10b8a17024ba83cac84ede2a8463d02b;
+    ```
+    Nb. Cut and paste the correct snapshot.
+
+This will place the Cardano blockchain data in the db subdirectory.
+
+#### Start cardano-node
+(Back as root user)
+
+Check that the db directory is correct in the systemd service file
+```
+cat /lib/systemd/system/cardano-node.service | grep 'database-path'
+```
+>--database-path /var/lib/cardano/mainnet/db
+
+Start cardano-node
+```
+systemctl enable cardano-node; \
+systemctl start cardano-node;
+```
+
+Check current tip
+```
+cardano-cli query tip --mainnet --socket-path /run/cardano/mainnet/node.socket
+```
+
