@@ -1,0 +1,14 @@
+[Unit]
+Description=Mithril signer service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=60
+User=cardano
+EnvironmentFile=/etc/cardano/mainnet/mithril-signer.env
+ExecStart=/usr/bin/mithril-signer -vvv
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,36 @@
+Source: mithril
+Section: misc
+Priority: optional
+Maintainer: builder <builder@terminada.io>
+Rules-Requires-Root: no
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+Vcs-Browser: https://github.com/input-output-hk/mithril
+Homepage: https://github.com/input-output-hk/mithril
+
+Package: mithril-signer
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, curl, jq
+Description: Signer for stake-based threshold multi-signatures on Cardano.
+ A protocol that enables stakeholders in a proof-of-stake (PoS) blockchain
+ network to individually sign messages, which are then aggregated into a
+ multi-signature, guaranteeing that they represent a minimum share of the
+ total stake.
+
+Package: mithril-client
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Client for stake-based threshold multi-signatures on Cardano.
+ A protocol that enables stakeholders in a proof-of-stake (PoS) blockchain
+ network to individually sign messages, which are then aggregated into a
+ multi-signature, guaranteeing that they represent a minimum share of the
+ total stake.
+
+Package: mithril-aggregator
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, curl, jq
+Description: Aggregator for stake-based threshold multi-signatures on Cardano.
+ A protocol that enables stakeholders in a proof-of-stake (PoS) blockchain
+ network to individually sign messages, which are then aggregated into a
+ multi-signature, guaranteeing that they represent a minimum share of the
+ total stake.

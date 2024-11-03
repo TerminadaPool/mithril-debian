@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -e
+
+SAVE_DIR='debian/mithril-signer/etc/cardano'
+CONFIG_DIR='/etc/cardano'
+HOME_DIR='/var/lib/cardano'
+
+# Build mithril-signer.env for each net
+for net in mainnet preprod; do
+  READER_BASE_URL="https://raw.githubusercontent.com/input-output-hk/mithril/main/mithril-infra/configuration/release-${net}"
+  READER_ADDRESS="$(curl -sL "${READER_BASE_URL}/era.addr" --max-time 20)"
+  READER_VKEY="$(curl -sL "${READER_BASE_URL}/era.vkey" --max-time 20)"
+  READER_ADAPTER_PARAMS="$(jq -nc --arg address "${READER_ADDRESS}" --arg verification_key "${READER_VKEY}" '{"address": $address, "verification_key": $verification_key}')"
+  AGGREGATOR_ENDPOINT="https://aggregator.release-${net}.api.mithril.network/aggregator"
+
+  SAVE_NET_DIR="${SAVE_DIR}/${net}"
+  mkdir -p "${SAVE_NET_DIR}"
+
+  # Save mithril-signer.env file to $SAVE_NET_DIR
+  cat << END_MITHRIL_SIGNER_ENV > "${SAVE_NET_DIR}/mithril-signer.env"
+KES_SECRET_KEY_PATH='${CONFIG_DIR}/private/kes.skey'
+OPERATIONAL_CERTIFICATE_PATH='${CONFIG_DIR}/private/node.cert'
+NETWORK='${net}'
+AGGREGATOR_ENDPOINT='${AGGREGATOR_ENDPOINT}'
+RUN_INTERVAL=60000
+DB_DIRECTORY='${HOME_DIR}/${net}/db'
+CARDANO_NODE_SOCKET_PATH='/run/cardano/${net}/node.socket'
+CARDANO_CLI_PATH='/usr/bin/cardano-cli'
+DATA_STORES_DIRECTORY='${HOME_DIR}/${net}/mithril/stores'
+STORE_RETENTION_LIMIT=5
+ERA_READER_ADAPTER_TYPE='cardano-chain'
+ERA_READER_ADAPTER_PARAMS='${READER_ADAPTER_PARAMS}'
+RELAY_ENDPOINT='http://192.168.0.7:3128' #FIXME
+END_MITHRIL_SIGNER_ENV
+
+done
+

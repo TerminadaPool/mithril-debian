@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+# Output every command that modifies files on the build system.
+export DH_VERBOSE = 1
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	rustup update
+	rustup default stable
+
+override_dh_auto_clean:
+
+override_dh_auto_test:
+
+override_dh_auto_build:
+	#make test
+	make build
+
+override_dh_auto_install:
+	debian/create_mithril_signer_env_files
+
+override_dh_installsystemd:
+	dh_installsystemd --no-enable --no-start --restart-after-upgrade
