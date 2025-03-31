@@ -21,7 +21,7 @@ sudo adduser --gecos '' --disabled-password builder
 
 Install build dependencies and some extra requirements
 ```
-sudo apt install build-essential fakeroot devscripts debhelper autoconf-archive d-shlibs pkg-kde-tools git curl automake pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make jq libncursesw5 libtool autoconf libncurses-dev libncurses5 libnuma-dev
+sudo apt install build-essential m4 fakeroot devscripts debhelper autoconf-archive d-shlibs pkg-kde-tools git curl automake pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make jq libncursesw5 libtool autoconf libncurses-dev libncurses5 libnuma-dev
 ```
 
 Recommend install llvm and set cc and c++ to use clang
@@ -41,7 +41,16 @@ sudo update-alternatives --remove cc /usr/bin/clang; \
 sudo update-alternatives --remove c++ /usr/bin/clang++;
 ```
 
-Switch to your builder account
+## Install Node.js
+As root:
+```
+curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh; \
+bash nodesource_setup.sh; \
+apt-get install -y nodejs; \
+node -v;
+```
+
+## Switch to your builder account
 ```
 sudo su - builder
 ```
@@ -49,6 +58,7 @@ The rest of this document assumes you are using your 'builder' account:
 builder@build:~$
 
 ## Install rust
+As builder:
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
@@ -61,6 +71,11 @@ rustup install stable; \
 rustup default stable; \
 rustup update; \
 rustup component add clippy rustfmt
+```
+
+## Install wasm-pack
+```
+curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 ```
 
 ### Determine latest mithril release
@@ -93,11 +108,10 @@ git fetch --all --recurse-submodules --tags; \
 git checkout "${MITHRIL_RELEASE}"; \
 
 git clone "${deb_build_instructions_repo}" debian; \
-unset MITHRIL_RELEASE package basedir; \
 
 debuild --prepend-path "$HOME/.cargo/bin" --set-envvar RUSTUP_HOME="${HOME}/.rustup" --set-envvar CARGO_HOME="${HOME}/.cargo" -us -uc -b; \
 
-unset deb_build_instructions_repo mithril_repo package basedir;
+unset deb_build_instructions_repo mithril_repo MITHRIL_RELEASE package basedir;
 ```
 
 Nb. debuild switches:  
