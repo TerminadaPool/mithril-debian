@@ -21,7 +21,7 @@ sudo adduser --gecos '' --disabled-password builder
 
 Install build dependencies and some extra requirements
 ```
-sudo apt install build-essential m4 fakeroot devscripts debhelper autoconf-archive d-shlibs pkg-kde-tools git curl automake pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make jq libncursesw5 libtool autoconf libncurses-dev libncurses5 libnuma-dev
+sudo apt install build-essential m4 fakeroot devscripts debhelper autoconf-archive d-shlibs pkg-kde-tools git curl automake pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make jq libncursesw5 libtool autoconf libncurses-dev libncurses5 libnuma-dev binutils-gold
 ```
 
 Recommend install llvm and set cc and c++ to use clang
